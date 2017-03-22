@@ -10,35 +10,50 @@ import org.springframework.stereotype.Repository;
 
 import cn.tf.mongodb.demo.bean.User;
 import cn.tf.mongodb.demo.dao.UserDao;
-import cn.tf.mongodb.demo.service.UserService;
-import cn.tf.mongodb.demo.service.impl.UserServiceImpl;
 
 @Repository
 public class UserDaoImpl implements UserDao {
 
-	UserService  userService=new UserServiceImpl();
-	
-	
-	public List<User> get() {
-		
-		return userService.get();
+	private MongoOperations mongoTemplate;
+
+	// @Autowired
+	// @Qualifier("mongoTemplate")
+	public void setMongoTemplate(MongoOperations mongoTemplate) {
+		this.mongoTemplate = mongoTemplate;
 	}
-	
+
+	public List<User> get() {
+		List<User> user = mongoTemplate.findAll(User.class);
+		return user;
+	}
 
 	public User getOne(Integer id) {
-		return userService.getOne(id);
+		User user = mongoTemplate.findOne(new Query(Criteria.where("userId")
+				.is(id)), User.class);
+		return user;
 	}
 
 	public void findAndModify(Integer id, Integer age) {
-		userService.findAndModify(id, age);
+		/*mongoTemplate.updateFirst(new Query(Criteria.where("userId").is(id)),
+				new Update().inc("age", age), User.class);*/
+		
+		mongoTemplate.updateFirst(new Query(Criteria.where("userId").is(id)),
+				new Update().set("age", age), User.class);
 	}
 
 	public void insert(User u) {
-		userService.insert(u);
+		mongoTemplate.insert(u);
 	}
 
 	public void removeOne(Integer id) {
-		userService.removeOne(id);
+		Criteria criteria = Criteria.where("userId").in(id);
+
+		if (criteria != null) {
+			Query query = new Query(criteria);
+			if (query != null
+					&& mongoTemplate.findOne(query, User.class) != null)
+				mongoTemplate.remove(mongoTemplate.findOne(query, User.class));
+		}
 
 	}
 
@@ -50,13 +65,28 @@ public class UserDaoImpl implements UserDao {
 	 * @param user
 	 */
 	public void update(User criteriaUser, User user) {
-		userService.update(criteriaUser, user);
+		Criteria criteria = Criteria.where("age").gt(criteriaUser.getAge());
+		;
+		Query query = new Query(criteria);
+		Update update = Update.update("name", user.getName()).set("age",
+				user.getAge());
+		mongoTemplate.updateMulti(query, update, User.class);
 	}
 
-	//按条件查询, 分页 <br>
-
+	/**
+	 * 按条件查询, 分页 <br>
+	 * ------------------------------<br>
+	 * 
+	 * @param criteriaUser
+	 * @param skip
+	 * @param limit
+	 * @return
+	 */
 	public List<User> find(User criteriaUser, int skip, int limit) {
-		return userService.find(criteriaUser, skip, limit);
+		Query query = getQuery(criteriaUser);
+		query.skip(skip);
+		query.limit(limit);
+		return mongoTemplate.find(query, User.class);
 	}
 
 	/**
@@ -70,7 +100,10 @@ public class UserDaoImpl implements UserDao {
 	 * @return
 	 */
 	public User findAndModify(User criteriaUser, User updateUser) {
-		return userService.findAndModify(criteriaUser, updateUser);
+		Query query = getQuery(criteriaUser);
+		Update update = Update.update("age", updateUser.getAge()).set("name",
+				updateUser.getName());
+		return mongoTemplate.findAndModify(query, update, User.class);
 	}
 
 	/**
@@ -81,28 +114,47 @@ public class UserDaoImpl implements UserDao {
 	 * @return
 	 */
 	public User findAndRemove(User criteriaUser) {
-		return userService.findAndRemove(criteriaUser);
+		Query query = getQuery(criteriaUser);
+		return mongoTemplate.findAndRemove(query, User.class);
 	}
 
 	/**
-	 * 统计
+	 * count <br>
 	 * ------------------------------<br>
 	 * 
 	 * @param criteriaUser
 	 * @return
 	 */
 	public long count(User criteriaUser) {
-		return  userService.count(criteriaUser);
+		Query query = getQuery(criteriaUser);
+		return mongoTemplate.count(query, User.class);
 	}
 
 	/**
-	 * 条件查查询
+	 * 条件查询
 	 * 
 	 * @param criteriaUser
 	 * @return
 	 */
 	public Query getQuery(User criteriaUser) {
-		return userService.getQuery(criteriaUser);
+		if (criteriaUser == null) {
+			criteriaUser = new User();
+		}
+		Query query = new Query();
+		if (criteriaUser.getId() != null) {
+			Criteria criteria = Criteria.where("userId").is(criteriaUser.getId());
+			query.addCriteria(criteria);
+		}
+		if (criteriaUser.getAge() > 0) {
+			Criteria criteria = Criteria.where("age").gt(criteriaUser.getAge());
+			query.addCriteria(criteria);
+		}
+		if (criteriaUser.getName() != null) {
+			Criteria criteria = Criteria.where("name").regex(
+					"^" + criteriaUser.getName());
+			query.addCriteria(criteria);
+		}
+		return query;
 	}
 
 }
