@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tool="http://www.springframework.org/schema/tool"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	                    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	                    http://www.springframework.org/schema/context
+	                    http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	                    http://www.springframework.org/schema/tx
+	                    http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	                    http://www.springframework.org/schema/aop 
+	                    http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+	                    http://www.springframework.org/schema/tool	                    
+	                    http://www.springframework.org/schema/tool/spring-tool-4.0.xsd
+	                 	http://www.springframework.org/schema/mvc                 
+	                    http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+	                    http://www.springframework.org/schema/data/mongo
+	                    http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
+
+	<!-- 注解扫描 com.rui.pro/** **.dao.***,**.service.***,**.controller.** -->
+	<!-- com.rui.pro.dao.*.impl/**,com.rui.pro.service.*.impl/**,com.rui.pro.controller/** -->
+	<context:component-scan base-package=" **.dao.***,**.service.***,**.controller.**"/>
+
+	<bean
+		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+		<property name="order" value="0" />
+	</bean>
+	<bean id="messageAdapter"
+		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean
+					class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+			</list>
+		</property>
+	</bean>
+
+
+	<bean
+		class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
+	<bean class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter" />
+
+
+	<bean id="exceptionMessageAdapter"
+		class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver">
+		<property name="messageConverters">
+			<list>
+				<!-- Support JSON MappingJacksonHttpMessageConverter -->
+				<bean
+					class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+			</list>
+		</property>
+	</bean>
+
+
+</beans>

@@ -1,6 +1,6 @@
-package cn.tf.mongodb;
+package cn.tf.mongodb.test;
 
-import java.util.ArrayList;
+/*import java.util.ArrayList;
 
 import org.bson.Document;
 
@@ -9,35 +9,35 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Filters;*/
 
 public class MongoDBJDBC {
 	
 	
 	public static void main(String[] args) {
-		try {
+		/*try {
 			MongoClient  mongoClient=new MongoClient("127.0.0.1",27017);
 
-			//Á¬½Óµ½Êı¾İ¿â
+			//è¿æ¥åˆ°æ•°æ®åº“
 			MongoDatabase  mongoDatabase=mongoClient.getDatabase("tf");
-			System.out.println("Á¬½Ó³É¹¦");
+			System.out.println("è¿æ¥æˆåŠŸ");
 			
 			//mongoDatabase.createCollection("test");
-			//System.out.println("´´½¨¼¯ºÏ³É¹¦");
+			//System.out.println("åˆ›å»ºé›†åˆæˆåŠŸ");
 			
-			//»ñÈ¡¼¯ºÏ
+			//è·å–é›†åˆ
 			MongoCollection<Document> collection = mongoDatabase.getCollection("test");
 			
-			//²åÈëÎÄµµ
+			//æ’å…¥æ–‡æ¡£
 			createDocument(collection);
 			
-			//²éÑ¯ÎÄµµ
+			//æŸ¥è¯¢æ–‡æ¡£
 			findIterable(collection);
 			
-			//¸üĞÂÎÄµµ
+			//æ›´æ–°æ–‡æ¡£
 			//updateMany(collection);
 			
-			//É¾³ıÎÄµµ
+			//åˆ é™¤æ–‡æ¡£
 			//deleteMany(collection);
 			
 			
@@ -53,7 +53,7 @@ public class MongoDBJDBC {
 	
 	
 	
-	//²åÈëÎÄµµ
+	//æ’å…¥æ–‡æ¡£
 	public static void createDocument(MongoCollection<Document>  collection){
 		
 		Document  document=new Document("title","MongoDB")
@@ -63,11 +63,11 @@ public class MongoDBJDBC {
 		ArrayList<Document> documents = new ArrayList<Document>();
 		documents.add(document);
 		collection.insertMany(documents);
-		System.out.println("ÎÄµµ²åÈë³É¹¦");
+		System.out.println("æ–‡æ¡£æ’å…¥æˆåŠŸ");
 		
 	}
 	
-	//²éÑ¯ÎÄµµ
+	//æŸ¥è¯¢æ–‡æ¡£
 	public  static void  findIterable(MongoCollection<Document>  collection){
 		FindIterable<Document>  findIterable=collection.find();
 		MongoCursor<Document> iterator = findIterable.iterator();
@@ -78,30 +78,29 @@ public class MongoDBJDBC {
 	
 	
 	
-	//¸üĞÂÎÄµµ
+	//æ›´æ–°æ–‡æ¡£
 	public  static void  updateMany(MongoCollection<Document>  collection){
 		collection.updateMany(Filters.eq("likes",100),new Document("$set",new Document("likes",200))); 
 		
-		//²éÑ¯ÎÄµµ
+		//æŸ¥è¯¢æ–‡æ¡£
 		findIterable(collection);
 	}
 	
-	//É¾³ı
+	//åˆ é™¤
 	public  static void deleteMany(MongoCollection<Document>  collection){
-		//É¾³ı·ûºÏÌõ¼şµÄµÚÒ»¸öÎÄµµ
+		//åˆ é™¤ç¬¦åˆæ¡ä»¶çš„ç¬¬ä¸€ä¸ªæ–‡æ¡£
 		
 		collection.deleteOne(Filters.eq("likes",200));
 		
 		
-		//É¾³ıËùÓĞ·ûºÏÌõ¼şµÄÎÄµµ
+		//åˆ é™¤æ‰€æœ‰ç¬¦åˆæ¡ä»¶çš„æ–‡æ¡£
 		collection.deleteMany(Filters.eq("likes",200));
 		
-		//²éÑ¯ÎÄµµ
+		//æŸ¥è¯¢æ–‡æ¡£
 		findIterable(collection);
 		
-		
+		*/
 		
 	}
-	
 
 }

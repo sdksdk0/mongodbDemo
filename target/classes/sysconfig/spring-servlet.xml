@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tool="http://www.springframework.org/schema/tool"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	                    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	                    http://www.springframework.org/schema/context
+	                    http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	                    http://www.springframework.org/schema/tx
+	                    http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	                    http://www.springframework.org/schema/aop 
+	                    http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+	                    http://www.springframework.org/schema/tool	                    
+	                    http://www.springframework.org/schema/tool/spring-tool-4.0.xsd
+	                 	http://www.springframework.org/schema/mvc
+	                    http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+
+	<!-- 启用spring mvc 注解 -->
+	<!-- <context:annotation-config /> <mvc:annotation-driven /> <mvc:default-servlet-handler 
+		/> -->
+
+
+
+	<!-- 静态资源访问 -->
+	<mvc:resources mapping="/fornt/**" location="/fornt/" />
+	<mvc:resources mapping="index.*" location="/" />
+	<mvc:resources mapping="login.*" location="/" />
+
+	<!--页面视图层信息 -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView"></property>
+		<property name="prefix" value="/"></property> <!--页面的前辍名 -->
+		<property name="suffix" value=".html"></property>
+		<!-- <property name="suffix" value=".jsp"></property> --> <!--页面的后辍名 -->
+	</bean>
+
+</beans>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

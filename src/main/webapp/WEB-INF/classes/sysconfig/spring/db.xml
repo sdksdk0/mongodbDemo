@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tool="http://www.springframework.org/schema/tool"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	                    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	                    http://www.springframework.org/schema/context
+	                    http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	                    http://www.springframework.org/schema/tx
+	                    http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	                    http://www.springframework.org/schema/aop 
+	                    http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+	                    http://www.springframework.org/schema/tool	                    
+	                    http://www.springframework.org/schema/tool/spring-tool-4.0.xsd
+	                 	http://www.springframework.org/schema/mvc                 
+	                    http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+	                    http://www.springframework.org/schema/data/mongo
+	                    http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
+
+	<context:property-placeholder
+		location="classpath:sysconfig/properties/mongodb.properties" /> 
+
+
+	<mongo:mongo id="mongo" host="localhost" port="27017">
+		<mongo:options connections-per-host="8"
+			threads-allowed-to-block-for-connection-multiplier="4"
+			connect-timeout="1000" max-wait-time="1500" auto-connect-retry="true"
+			socket-keep-alive="true" socket-timeout="1500" slave-ok="true"
+			write-number="1" write-timeout="0" write-fsync="true" />
+	</mongo:mongo>
+
+
+	<mongo:db-factory id="mongoDbFactory" dbname="tf"
+		mongo-ref="mongo" />
+
+	<mongo:mapping-converter base-package="cn.tf.mongodb.demo.bean"
+		id="mongoConverter" />
+
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
+		<constructor-arg name="mongoConverter" ref="mongoConverter" />
+	</bean>
+
+	<mongo:repositories base-package="cn.tf.mongodb.demo.bean" />
+
+	<bean id="userDao" class="cn.tf.mongodb.demo.dao.impl.UserDaoImpl">
+		<property name="mongoTemplate" ref="mongoTemplate" />
+	</bean>
+
+
+
+
+
+	<!-- 使用annotation定义事务 -->
+	<!-- <tx:annotation-driven transaction-manager="transactionManager" /> -->
+
+	<!-- 扫描实现 -->
+	<context:annotation-config />
+
+</beans>
